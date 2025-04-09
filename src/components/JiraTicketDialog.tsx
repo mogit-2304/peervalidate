@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   AlertDialog,
   AlertDialogAction,
@@ -46,6 +46,16 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
   const [summary, setSummary] = useState(`${cardData.content}`);
   const [description, setDescription] = useState('');
   
+  // Set initial description with suggestions when dialog opens
+  useEffect(() => {
+    if (isOpen && cardData.suggestions.length > 0) {
+      const suggestionsText = cardData.suggestions
+        .map(s => `- ${s.suggestion}`)
+        .join('\n');
+      setDescription(suggestionsText);
+    }
+  }, [isOpen, cardData.suggestions]);
+  
   // Format suggestions to create a prompt for ChatGPT
   const formatContent = () => {
     let content = `Main Idea: ${cardData.content}\n\n`;
@@ -73,12 +83,10 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
     // Add user-entered description if available
     if (description.trim()) {
       jiraDescription += `${description}\n\n`;
-    }
-    
-    // Add suggestion text to description section
-    if (cardData.suggestions.length > 0) {
+    } else if (cardData.suggestions.length > 0) {
+      // If no manual description but suggestions exist, add them as description
       jiraDescription += "Suggestion Highlights:\n";
-      cardData.suggestions.forEach((suggestion, index) => {
+      cardData.suggestions.forEach((suggestion) => {
         jiraDescription += `- ${suggestion.suggestion}\n`;
       });
       jiraDescription += "\n";
