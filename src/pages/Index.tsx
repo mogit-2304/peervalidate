@@ -1,11 +1,7 @@
 
 import React, { useState, useRef } from "react";
 import SwipeContainer from "@/components/SwipeContainer";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
-import CardCreationForm from "@/components/CardCreationForm";
 import { Card } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 
@@ -75,59 +71,16 @@ const sampleCards: Card[] = [
 
 const Index = () => {
   const [cards, setCards] = useState<Card[]>(sampleCards);
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const swipeContainerRef = useRef<{ resetToCard: (cardId: string) => void } | null>(null);
   
-  const handleAddCard = (newCard: Omit<Card, "id">) => {
-    const cardWithId: Card = {
-      ...newCard,
-      id: uuidv4()
-    };
-    
-    setCards([cardWithId, ...cards]);
-    setIsSheetOpen(false);
-    
-    // Use setTimeout to ensure state has updated before resetting
-    setTimeout(() => {
-      if (swipeContainerRef.current) {
-        swipeContainerRef.current.resetToCard(cardWithId.id);
-      }
-    }, 100);
-    
-    toast.success("New card added!");
-  };
-  
   return (
-    <div className="min-h-screen bg-gradient-to-b from-dating-lightgray to-white">
+    <div className="min-h-screen pb-24 bg-gradient-to-b from-dating-lightgray to-white">
       <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-8 relative">
+        <header className="text-center mb-8">
           <h1 className="text-3xl font-bold">
             <span className="text-dating-yellow">SwipeSpark</span>
           </h1>
           <p className="text-dating-darkgray mt-2">Swipe right to approve, left to reject</p>
-          
-          {/* Add Card CTA in top right */}
-          <div className="absolute top-0 right-0">
-            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-              <SheetTrigger asChild>
-                <Button className="bg-dating-yellow text-black hover:bg-dating-yellow/90">
-                  <PlusCircle className="mr-2" size={18} />
-                  Add Card
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="overflow-y-auto">
-                <SheetHeader>
-                  <SheetTitle>Create a new card</SheetTitle>
-                </SheetHeader>
-                <div className="py-6">
-                  <CardCreationForm 
-                    onSubmit={handleAddCard}
-                    onCancel={() => setIsSheetOpen(false)}
-                  />
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
         </header>
         
         <div className="max-w-md mx-auto h-[60vh] mb-4">
