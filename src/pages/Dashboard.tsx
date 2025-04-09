@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
@@ -11,7 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger
 } from "@/components/ui/accordion";
-import { ChevronDown, FileText } from "lucide-react";
+import { ChevronDown, FileText, ThumbsUp, ThumbsDown } from "lucide-react";
 import { toast } from "sonner";
 
 const Dashboard = () => {
@@ -25,20 +25,16 @@ const Dashboard = () => {
     { name: "Tech", value: 2 },
   ];
   
-  const activityData = [
-    { name: "Approved", value: 24 },
-    { name: "Rejected", value: 13 },
-    { name: "Suggestions", value: 8 },
-  ];
-  
   const COLORS = ["#C72C41", "#FF8042", "#00C49F", "#0088FE", "#8884d8", "#82ca9d"];
   
-  // Enhanced card data with suggestions
+  // Enhanced card data with suggestions and response counts
   const cardsWithSuggestions = [
     {
       id: "card-1",
       content: "I believe pineapple belongs on pizza",
       category: "WIS",
+      approvedCount: 67,
+      rejectedCount: 34,
       suggestions: [
         { id: "s1", suggestion: "It depends on the pizza type", date: "2 days ago", author: "John Doe" },
         { id: "s2", suggestion: "Try adding ham with pineapple", date: "3 days ago", author: "Maria Garcia" },
@@ -49,6 +45,8 @@ const Dashboard = () => {
       id: "card-2",
       content: "I enjoy going to museums on weekends",
       category: "ETS",
+      approvedCount: 45,
+      rejectedCount: 12,
       suggestions: [
         { id: "s4", suggestion: "Try art galleries too", date: "5 days ago", author: "Emily Wilson" },
         { id: "s5", suggestion: "Check out special night exhibitions", date: "6 days ago", author: "Sam Taylor" }
@@ -58,6 +56,8 @@ const Dashboard = () => {
       id: "card-3",
       content: "I think cats are better than dogs",
       category: "MIS ONE",
+      approvedCount: 89,
+      rejectedCount: 76,
       suggestions: [
         { id: "s6", suggestion: "Both have their own charms", date: "1 week ago", author: "Jamie Rivera" },
         { id: "s7", suggestion: "Consider personality traits over species", date: "8 days ago", author: "Pat Chen" },
@@ -68,6 +68,8 @@ const Dashboard = () => {
       id: "card-4",
       content: "We should implement dark mode in our app",
       category: "Tech",
+      approvedCount: 102,
+      rejectedCount: 14,
       suggestions: [
         { id: "s9", suggestion: "Consider using a theme toggle", date: "3 days ago", author: "Chris Lee" },
         { id: "s10", suggestion: "Use system preferences to set initial mode", date: "4 days ago", author: "Morgan Shaw" }
@@ -77,6 +79,8 @@ const Dashboard = () => {
       id: "card-5",
       content: "Our sales strategy needs improvement",
       category: "Sales",
+      approvedCount: 56,
+      rejectedCount: 8,
       suggestions: [
         { id: "s11", suggestion: "Focus more on customer retention", date: "4 days ago", author: "Jordan Blake" }
       ]
@@ -85,6 +89,8 @@ const Dashboard = () => {
       id: "card-6",
       content: "Customer support response time is too long",
       category: "Support",
+      approvedCount: 78,
+      rejectedCount: 23,
       suggestions: [
         { id: "s12", suggestion: "Add automated initial responses", date: "2 days ago", author: "Casey Thompson" }
       ]
@@ -109,10 +115,9 @@ const Dashboard = () => {
         </header>
         
         <Tabs defaultValue="overview" className="w-full max-w-4xl mx-auto">
-          <TabsList className="grid w-full grid-cols-3 mb-6">
+          <TabsList className="grid w-full grid-cols-2 mb-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="activity">Activity</TabsTrigger>
-            <TabsTrigger value="suggestions">Suggestions</TabsTrigger>
+            <TabsTrigger value="cardsummary">Card Summary</TabsTrigger>
           </TabsList>
           
           <TabsContent value="overview" className="space-y-4">
@@ -138,34 +143,13 @@ const Dashboard = () => {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip />
                   </PieChart>
                 </ResponsiveContainer>
               </CardContent>
             </Card>
           </TabsContent>
           
-          <TabsContent value="activity" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>User Activity</CardTitle>
-                <CardDescription>Your interactions with cards</CardDescription>
-              </CardHeader>
-              <CardContent className="flex justify-center py-4">
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={activityData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#C72C41" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="suggestions" className="space-y-6">
+          <TabsContent value="cardsummary" className="space-y-6">
             <div className="grid gap-6">
               {cardsWithSuggestions.map((card) => (
                 <Card key={card.id}>
@@ -179,6 +163,16 @@ const Dashboard = () => {
                     </div>
                   </CardHeader>
                   <CardContent>
+                    <div className="flex gap-4 mb-4">
+                      <div className="flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full">
+                        <ThumbsUp className="h-4 w-4" />
+                        <span className="font-medium">{card.approvedCount}</span>
+                      </div>
+                      <div className="flex items-center gap-2 bg-red-100 text-red-800 px-3 py-1 rounded-full">
+                        <ThumbsDown className="h-4 w-4" />
+                        <span className="font-medium">{card.rejectedCount}</span>
+                      </div>
+                    </div>
                     <Accordion type="single" collapsible className="w-full">
                       <AccordionItem value={card.id}>
                         <AccordionTrigger className="text-sm font-medium">
