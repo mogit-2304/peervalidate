@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
-import { Card, SwipeHorizontal, LayoutDashboard } from "lucide-react";
+import { CreditCard, Shuffle, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const BottomNav = () => {
@@ -11,12 +11,12 @@ const BottomNav = () => {
     {
       path: "/",
       label: "Swipe",
-      icon: SwipeHorizontal,
+      icon: Shuffle,
     },
     {
       path: "/create",
       label: "Create",
-      icon: Card,
+      icon: CreditCard,
     },
     {
       path: "/dashboard",
