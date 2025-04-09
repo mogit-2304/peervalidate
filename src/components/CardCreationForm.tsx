@@ -13,8 +13,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/types";
 import { toast } from "sonner";
-import { ImagePlus } from "lucide-react";
+import { ImagePlus, EyeIcon, ChevronDown, ChevronUp } from "lucide-react";
 import CardPreview from "./CardPreview";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 interface CardCreationFormProps {
   onSubmit: (card: Omit<Card, "id">) => void;
@@ -37,6 +42,7 @@ const CardCreationForm: React.FC<CardCreationFormProps> = ({ onSubmit, onCancel 
   const [category, setCategory] = useState("");
   const [duration, setDuration] = useState("");
   const [imageUrl, setImageUrl] = useState<string | undefined>();
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +83,8 @@ const CardCreationForm: React.FC<CardCreationFormProps> = ({ onSubmit, onCancel 
     setDuration("");
     setImageUrl(undefined);
   };
+
+  const hasPreviewContent = content || category || imageUrl;
 
   return (
     <div className="space-y-6">
@@ -168,19 +176,42 @@ const CardCreationForm: React.FC<CardCreationFormProps> = ({ onSubmit, onCancel 
         </div>
       </div>
 
-      {/* Card Preview Section */}
-      {(content || category || imageUrl) && (
+      {/* Card Preview Section as Collapsible */}
+      {hasPreviewContent && (
         <div className="mt-6">
-          <h3 className="text-sm font-medium mb-4">Card Preview</h3>
-          <div className="border rounded-lg overflow-hidden h-[300px] relative">
-            <CardPreview 
-              card={{
-                content,
-                category,
-                imageUrl
-              }}
-            />
-          </div>
+          <Collapsible
+            open={isPreviewOpen}
+            onOpenChange={setIsPreviewOpen}
+            className="border rounded-lg overflow-hidden bg-white shadow-sm"
+          >
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className="flex w-full justify-between p-4 rounded-none hover:bg-gray-50"
+              >
+                <span className="flex items-center text-sm font-medium">
+                  <EyeIcon className="mr-2 h-4 w-4" />
+                  Card Preview
+                </span>
+                {isPreviewOpen ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className="border-t h-[300px] relative">
+                <CardPreview 
+                  card={{
+                    content,
+                    category,
+                    imageUrl
+                  }}
+                />
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
       )}
 
