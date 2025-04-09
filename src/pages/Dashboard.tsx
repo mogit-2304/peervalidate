@@ -99,7 +99,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="pb-24 bg-gradient-to-b from-[#2D142C] to-[#2D142C]/80 min-h-screen">
+    <div className="pb-24 bg-[#2D142C] min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <header className="text-center mb-8">
           <h1 className="text-3xl font-bold">
