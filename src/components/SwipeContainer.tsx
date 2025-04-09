@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from "react";
 import { cn } from "@/lib/utils";
 import SwipeCardEnhanced from "./SwipeCardEnhanced";
 import FeedbackModal from "./FeedbackModal";
@@ -9,7 +9,11 @@ interface SwipeContainerProps {
   cards: Card[];
 }
 
-const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
+export interface SwipeContainerRef {
+  resetToCard: (cardId: string) => void;
+}
+
+const SwipeContainer = forwardRef<SwipeContainerRef, SwipeContainerProps>(({ cards }, ref) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [processedCards, setProcessedCards] = useState<Card[]>([]);
   const [dragState, setDragState] = useState<"none" | "left" | "right" | "up">("none");
@@ -21,6 +25,24 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
   const dragStartY = useRef(0);
   const currentX = useRef(0);
   const currentY = useRef(0);
+
+  // Update displayed cards when cards prop changes
+  useEffect(() => {
+    setDisplayedCards(cards);
+  }, [cards]);
+
+  // Expose the resetToCard method to parent components
+  useImperativeHandle(ref, () => ({
+    resetToCard: (cardId: string) => {
+      const cardIndex = displayedCards.findIndex(card => card.id === cardId);
+      if (cardIndex !== -1) {
+        setActiveIndex(cardIndex);
+        setProcessedCards([]);
+        setDragState("none");
+        setCardPosition({ x: 0, y: 0 });
+      }
+    }
+  }));
 
   const handleSwipeLeft = () => {
     if (activeIndex >= displayedCards.length) return;
@@ -274,6 +296,8 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
       )}
     </div>
   );
-};
+});
+
+SwipeContainer.displayName = "SwipeContainer";
 
 export default SwipeContainer;

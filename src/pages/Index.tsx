@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import SwipeContainer from "@/components/SwipeContainer";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -76,6 +76,7 @@ const sampleCards: Card[] = [
 const Index = () => {
   const [cards, setCards] = useState<Card[]>(sampleCards);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const swipeContainerRef = useRef<{ resetToCard: (cardId: string) => void } | null>(null);
   
   const handleAddCard = (newCard: Omit<Card, "id">) => {
     const cardWithId: Card = {
@@ -85,6 +86,14 @@ const Index = () => {
     
     setCards([cardWithId, ...cards]);
     setIsSheetOpen(false);
+    
+    // Use setTimeout to ensure state has updated before resetting
+    setTimeout(() => {
+      if (swipeContainerRef.current) {
+        swipeContainerRef.current.resetToCard(cardWithId.id);
+      }
+    }, 100);
+    
     toast.success("New card added!");
   };
   
@@ -122,7 +131,7 @@ const Index = () => {
         </header>
         
         <div className="max-w-md mx-auto h-[60vh] mb-4">
-          <SwipeContainer cards={cards} />
+          <SwipeContainer ref={swipeContainerRef} cards={cards} />
         </div>
         
         <footer className="text-center text-sm text-gray-500 mt-8">
