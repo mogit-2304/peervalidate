@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,22 +12,20 @@ import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
 import { initMockApi } from "./mocks/api";
 
-const App = () => {
-  // Create a client
-  const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 5 * 60 * 1000,
-        retry: 1,
-      },
+// Create the client outside of the component
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      retry: 1,
     },
-  }));
+  },
+});
 
-  // Initialize mock API for development
-  useEffect(() => {
-    initMockApi();
-  }, []);
+// Initialize mock API for development
+initMockApi();
 
+const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
