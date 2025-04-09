@@ -12,6 +12,9 @@ import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
 import { initMockApi } from "./mocks/api";
 
+// Initialize mock API for development
+initMockApi();
+
 // Create the client outside of the component
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,10 +25,7 @@ const queryClient = new QueryClient({
   },
 });
 
-// Initialize mock API for development
-initMockApi();
-
-const App = () => {
+const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
