@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Dating app specific colors
+				dating: {
+					yellow: '#FFC629',
+					red: '#FF4B4B',
+					green: '#4CD964',
+					blue: '#4A90E2',
+					purple: '#9B87F5',
+					lightgray: '#F1F0FB',
+					darkgray: '#403E43',
 				}
 			},
 			borderRadius: {
@@ -84,11 +95,26 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'swipe-right': {
+					'0%': { transform: 'translateX(0) rotate(0)' },
+					'100%': { transform: 'translateX(150%) rotate(30deg)' }
+				},
+				'swipe-left': {
+					'0%': { transform: 'translateX(0) rotate(0)' },
+					'100%': { transform: 'translateX(-150%) rotate(-30deg)' }
+				},
+				'slide-in': {
+					from: { transform: 'translateY(100px)', opacity: '0' },
+					to: { transform: 'translateY(0)', opacity: '1' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'swipe-right': 'swipe-right 0.5s forwards',
+				'swipe-left': 'swipe-left 0.5s forwards',
+				'slide-in': 'slide-in 0.5s ease-out'
 			}
 		}
 	},
