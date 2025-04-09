@@ -200,7 +200,7 @@ const Dashboard = () => {
                                 onClick={() => openJiraTicketDialog(card)}
                               >
                                 <FileText className="h-4 w-4" />
-                                Create JIRA PB Ticket
+                                Summarize
                               </Button>
                             </div>
                           </div>
