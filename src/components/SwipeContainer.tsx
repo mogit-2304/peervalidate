@@ -1,19 +1,19 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import SwipeCard from "./SwipeCard";
+import SwipeCardEnhanced from "./SwipeCardEnhanced";
 import FeedbackModal from "./FeedbackModal";
 import { toast } from "sonner";
+import { Card } from "@/types";
 
 interface SwipeContainerProps {
-  cards: string[];
+  cards: Card[];
 }
 
 const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [processedCards, setProcessedCards] = useState<string[]>([]);
+  const [processedCards, setProcessedCards] = useState<Card[]>([]);
   const [dragState, setDragState] = useState<"none" | "left" | "right" | "up">("none");
-  const [displayedCards, setDisplayedCards] = useState<string[]>(cards);
+  const [displayedCards, setDisplayedCards] = useState<Card[]>(cards);
   const [isHolding, setIsHolding] = useState(false);
   const [cardPosition, setCardPosition] = useState({ x: 0, y: 0 });
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
@@ -64,7 +64,7 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
     
     const current = displayedCards[activeIndex];
     
-    console.log(`Feedback for "${current}": ${feedback}`);
+    console.log(`Feedback for "${current.content}": ${feedback}`);
     
     // Process the card after feedback is submitted
     setProcessedCards([...processedCards, current]);
@@ -199,15 +199,9 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
               : undefined;
           
           return (
-            <SwipeCard
-              key={`${card}-${i}`}
-              content={card}
-              onSwipeLeft={handleSwipeLeft}
-              onSwipeRight={handleSwipeRight}
-              onSwipeUp={handleSwipeUp}
-              dragState={i === activeIndex ? dragState : "none"}
-              active={i === activeIndex}
-              index={cardIndex}
+            <SwipeCardEnhanced
+              key={`${card.id}-${i}`}
+              card={card}
               style={style}
             />
           );
@@ -258,7 +252,7 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
           isOpen={isFeedbackModalOpen}
           onClose={() => setIsFeedbackModalOpen(false)}
           onSubmit={handleFeedbackSubmit}
-          cardContent={displayedCards[activeIndex]}
+          cardContent={displayedCards[activeIndex].content}
         />
       )}
     </div>
