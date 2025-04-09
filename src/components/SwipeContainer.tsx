@@ -4,7 +4,7 @@ import SwipeCardEnhanced from "./SwipeCardEnhanced";
 import FeedbackModal from "./FeedbackModal";
 import { toast } from "sonner";
 import { Card } from "@/types";
-import { Check, X, ArrowUp } from "lucide-react";
+import { Check, X, MessageCircle } from "lucide-react";
 
 interface SwipeContainerProps {
   cards: Card[];
@@ -275,7 +275,7 @@ const SwipeContainer = forwardRef<SwipeContainerRef, SwipeContainerProps>(({ car
           className="bg-dating-red text-[#2D142C] rounded-full w-16 h-16 flex items-center justify-center shadow-[0_0_10px_rgba(238,69,64,0.5)] hover:bg-opacity-90 transition-colors"
           disabled={activeIndex >= displayedCards.length}
         >
-          <ArrowUp className="h-8 w-8 text-[#2D142C]" />
+          <MessageCircle className="h-8 w-8 text-[#2D142C]" />
         </button>
         <button
           onClick={handleSwipeRight}
