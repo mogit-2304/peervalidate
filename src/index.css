@@ -102,7 +102,7 @@
 
   .swipe-card {
     backface-visibility: hidden;
-    transition: transform 0.3s;
+    transition: transform 0.3s ease;
   }
 
   .swipe-action {

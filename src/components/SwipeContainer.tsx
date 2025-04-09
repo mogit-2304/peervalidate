@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import SwipeCard from "./SwipeCard";
 import { toast } from "sonner";
@@ -13,6 +13,8 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
   const [processedCards, setProcessedCards] = useState<string[]>([]);
   const [dragState, setDragState] = useState<"none" | "left" | "right" | "up">("none");
   const [displayedCards, setDisplayedCards] = useState<string[]>(cards);
+  const [isHolding, setIsHolding] = useState(false);
+  const [cardPosition, setCardPosition] = useState({ x: 0, y: 0 });
   const dragStartX = useRef(0);
   const dragStartY = useRef(0);
   const currentX = useRef(0);
@@ -28,6 +30,7 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
       setProcessedCards([...processedCards, current]);
       setActiveIndex(activeIndex + 1);
       setDragState("none");
+      setCardPosition({ x: 0, y: 0 });
       toast.error("Rejected!");
     }, 300);
   };
@@ -42,6 +45,7 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
       setProcessedCards([...processedCards, current]);
       setActiveIndex(activeIndex + 1);
       setDragState("none");
+      setCardPosition({ x: 0, y: 0 });
       toast.success("Approved!");
     }, 300);
   };
@@ -56,21 +60,30 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
       setProcessedCards([...processedCards, current]);
       setActiveIndex(activeIndex + 1);
       setDragState("none");
+      setCardPosition({ x: 0, y: 0 });
       toast.info("Suggestion!");
     }, 300);
   };
 
   const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    setIsHolding(true);
     if ("touches" in e) {
       dragStartX.current = e.touches[0].clientX;
       dragStartY.current = e.touches[0].clientY;
+      currentX.current = e.touches[0].clientX;
+      currentY.current = e.touches[0].clientY;
     } else {
       dragStartX.current = e.clientX;
       dragStartY.current = e.clientY;
+      currentX.current = e.clientX;
+      currentY.current = e.clientY;
     }
+    setCardPosition({ x: 0, y: 0 });
   };
 
   const handleTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
+    if (!isHolding || activeIndex >= displayedCards.length) return;
+    
     if ("touches" in e) {
       currentX.current = e.touches[0].clientX;
       currentY.current = e.touches[0].clientY;
@@ -82,10 +95,12 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
     const diffX = currentX.current - dragStartX.current;
     const diffY = currentY.current - dragStartY.current;
     
+    setCardPosition({ x: diffX, y: diffY });
+    
+    // Only set visual drag state for large movements
     if (Math.abs(diffX) < 50 && Math.abs(diffY) < 50) {
       setDragState("none");
     } else if (diffY < -50 && Math.abs(diffY) > Math.abs(diffX)) {
-      // Upward swipe (negative Y)
       setDragState("up");
     } else if (diffX > 50) {
       setDragState("right");
@@ -95,11 +110,14 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
   };
 
   const handleTouchEnd = () => {
+    if (!isHolding) return;
+    setIsHolding(false);
+    
     const diffX = currentX.current - dragStartX.current;
     const diffY = currentY.current - dragStartY.current;
     
+    // Only trigger swipe on significant movement AND key press
     if (Math.abs(diffY) > 100 && diffY < 0 && Math.abs(diffY) > Math.abs(diffX)) {
-      // Upward swipe detected
       handleSwipeUp();
     } else if (Math.abs(diffX) >= 100) {
       if (diffX > 0) {
@@ -109,13 +127,33 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
       }
     } else {
       setDragState("none");
+      setCardPosition({ x: 0, y: 0 });
     }
   };
+
+  // Handle keyboard events
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isHolding || activeIndex >= displayedCards.length) return;
+      
+      if (e.key === "ArrowLeft") {
+        handleSwipeLeft();
+      } else if (e.key === "ArrowRight") {
+        handleSwipeRight();
+      } else if (e.key === "ArrowUp") {
+        handleSwipeUp();
+      }
+    };
+    
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isHolding, activeIndex, displayedCards.length]);
 
   const resetCards = () => {
     setActiveIndex(0);
     setProcessedCards([]);
     setDragState("none");
+    setCardPosition({ x: 0, y: 0 });
     
     // Shuffle the cards for variety
     const shuffled = [...cards].sort(() => Math.random() - 0.5);
@@ -139,10 +177,17 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
         onMouseDown={handleTouchStart}
         onMouseMove={handleTouchMove}
         onMouseUp={handleTouchEnd}
+        onMouseLeave={handleTouchEnd}
       >
         {displayedCards.map((card, i) => {
           const cardIndex = i - activeIndex;
           if (cardIndex < 0 || cardIndex > 2) return null;
+          
+          // Only apply position transform to the active card while holding
+          const style = 
+            i === activeIndex && isHolding 
+              ? { transform: `translate(${cardPosition.x}px, ${cardPosition.y}px) rotate(${cardPosition.x * 0.05}deg)` } 
+              : undefined;
           
           return (
             <SwipeCard
@@ -154,6 +199,7 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
               dragState={i === activeIndex ? dragState : "none"}
               active={i === activeIndex}
               index={cardIndex}
+              style={style}
             />
           );
         })}

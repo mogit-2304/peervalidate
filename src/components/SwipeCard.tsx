@@ -10,6 +10,7 @@ interface SwipeCardProps {
   dragState: "none" | "left" | "right" | "up";
   active: boolean;
   index: number;
+  style?: React.CSSProperties;
 }
 
 const SwipeCard: React.FC<SwipeCardProps> = ({
@@ -20,6 +21,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
   dragState,
   active,
   index,
+  style,
 }) => {
   return (
     <div
@@ -31,6 +33,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({
         !active && "scale-[0.95] opacity-80",
         index === 0 ? "z-30" : index === 1 ? "z-20" : "z-10"
       )}
+      style={style}
     >
       <div className="flex flex-col h-full p-6">
         <div className="flex-1 flex items-center justify-center">
