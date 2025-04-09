@@ -4,12 +4,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { submitCardSuggestion } from "@/services/api";
 
 interface FeedbackModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (feedback: string) => void;
   cardContent: string;
+  cardId: string;
 }
 
 const FeedbackModal: React.FC<FeedbackModalProps> = ({
@@ -17,19 +19,35 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
   onClose,
   onSubmit,
   cardContent,
+  cardId,
 }) => {
   const [feedback, setFeedback] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!feedback.trim()) {
       toast.error("Please enter your feedback");
       return;
     }
     
-    onSubmit(feedback);
-    setFeedback("");
-    onClose();
-    toast.success("Feedback submitted successfully!");
+    setIsSubmitting(true);
+    
+    try {
+      // Submit to backend
+      await submitCardSuggestion(cardId, feedback);
+      
+      // Call the original onSubmit for UI updates
+      onSubmit(feedback);
+      
+      setFeedback("");
+      onClose();
+      toast.success("Feedback submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+      toast.error("Failed to submit feedback. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -49,15 +67,16 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
             className="min-h-[120px]"
+            disabled={isSubmitting}
           />
         </div>
         
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit}>
-            Submit Feedback
+          <Button onClick={handleSubmit} disabled={isSubmitting}>
+            {isSubmitting ? "Submitting..." : "Submit Feedback"}
           </Button>
         </DialogFooter>
       </DialogContent>

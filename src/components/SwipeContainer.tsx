@@ -292,6 +292,7 @@ const SwipeContainer = forwardRef<SwipeContainerRef, SwipeContainerProps>(({ car
           onClose={() => setIsFeedbackModalOpen(false)}
           onSubmit={handleFeedbackSubmit}
           cardContent={displayedCards[activeIndex].content}
+          cardId={displayedCards[activeIndex].id}
         />
       )}
     </div>
