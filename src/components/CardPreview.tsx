@@ -12,7 +12,7 @@ interface CardPreviewProps {
 
 const CardPreview: React.FC<CardPreviewProps> = ({ card }) => {
   return (
-    <div className="absolute inset-0 bg-white overflow-hidden flex flex-col">
+    <div className="absolute inset-0 bg-white overflow-hidden flex flex-col shadow-[0_0_15px_rgba(238,69,64,0.5)]">
       {card.imageUrl && (
         <div className="h-1/2 bg-gray-100">
           <img 

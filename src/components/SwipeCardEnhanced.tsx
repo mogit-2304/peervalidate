@@ -18,7 +18,7 @@ const SwipeCardEnhanced: React.FC<SwipeCardEnhancedProps> = ({
 }) => {
   return (
     <div 
-      className="absolute inset-0 bg-white rounded-lg shadow-lg overflow-hidden flex flex-col"
+      className="absolute inset-0 bg-white rounded-lg overflow-hidden flex flex-col shadow-[0_0_15px_rgba(238,69,64,0.5)]"
       style={{
         ...style,
         zIndex
@@ -38,7 +38,7 @@ const SwipeCardEnhanced: React.FC<SwipeCardEnhancedProps> = ({
         <div>
           <div className="flex justify-between items-start mb-4">
             {card.category && (
-              <Badge className="bg-dating-yellow text-black">
+              <Badge className="bg-dating-red text-white">
                 {card.category}
               </Badge>
             )}
