@@ -4,6 +4,7 @@ import SwipeCardEnhanced from "./SwipeCardEnhanced";
 import FeedbackModal from "./FeedbackModal";
 import { toast } from "sonner";
 import { Card } from "@/types";
+import { Check, X, ArrowUp } from "lucide-react";
 
 interface SwipeContainerProps {
   cards: Card[];
@@ -252,7 +253,7 @@ const SwipeContainer = forwardRef<SwipeContainerRef, SwipeContainerProps>(({ car
               <h2 className="text-2xl font-bold mb-4">No more cards!</h2>
               <button
                 onClick={resetCards}
-                className="bg-dating-yellow text-black font-bold py-3 px-6 rounded-full shadow-lg hover:bg-opacity-90 transition-colors"
+                className="bg-dating-red text-[#2D142C] font-bold py-3 px-6 rounded-full shadow-[0_0_10px_rgba(238,69,64,0.5)] hover:bg-opacity-90 transition-colors"
               >
                 Reset Cards
               </button>
@@ -264,24 +265,24 @@ const SwipeContainer = forwardRef<SwipeContainerRef, SwipeContainerProps>(({ car
       <div className="flex justify-center space-x-4 py-6">
         <button
           onClick={handleSwipeLeft}
-          className="bg-dating-red text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:bg-opacity-90 transition-colors"
+          className="bg-dating-red text-[#2D142C] rounded-full w-16 h-16 flex items-center justify-center shadow-[0_0_10px_rgba(238,69,64,0.5)] hover:bg-opacity-90 transition-colors"
           disabled={activeIndex >= displayedCards.length}
         >
-          <span className="text-2xl">✕</span>
+          <X className="h-8 w-8 text-[#2D142C]" />
         </button>
         <button
           onClick={handleSwipeUp}
-          className="bg-dating-blue text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:bg-opacity-90 transition-colors"
+          className="bg-dating-red text-[#2D142C] rounded-full w-16 h-16 flex items-center justify-center shadow-[0_0_10px_rgba(238,69,64,0.5)] hover:bg-opacity-90 transition-colors"
           disabled={activeIndex >= displayedCards.length}
         >
-          <span className="text-2xl">↑</span>
+          <ArrowUp className="h-8 w-8 text-[#2D142C]" />
         </button>
         <button
           onClick={handleSwipeRight}
-          className="bg-dating-green text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:bg-opacity-90 transition-colors"
+          className="bg-dating-red text-[#2D142C] rounded-full w-16 h-16 flex items-center justify-center shadow-[0_0_10px_rgba(238,69,64,0.5)] hover:bg-opacity-90 transition-colors"
           disabled={activeIndex >= displayedCards.length}
         >
-          <span className="text-2xl">✓</span>
+          <Check className="h-8 w-8 text-[#2D142C]" />
         </button>
       </div>
 
