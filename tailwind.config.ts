@@ -104,6 +104,10 @@ export default {
 					'0%': { transform: 'translateX(0) rotate(0)' },
 					'100%': { transform: 'translateX(-150%) rotate(-30deg)' }
 				},
+				'swipe-up': {
+					'0%': { transform: 'translateY(0) rotate(0)' },
+					'100%': { transform: 'translateY(-150%) rotate(-5deg)' }
+				},
 				'slide-in': {
 					from: { transform: 'translateY(100px)', opacity: '0' },
 					to: { transform: 'translateY(0)', opacity: '1' }
@@ -114,6 +118,7 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'swipe-right': 'swipe-right 0.5s forwards',
 				'swipe-left': 'swipe-left 0.5s forwards',
+				'swipe-up': 'swipe-up 0.5s forwards',
 				'slide-in': 'slide-in 0.5s ease-out'
 			}
 		}

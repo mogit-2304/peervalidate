@@ -11,10 +11,12 @@ interface SwipeContainerProps {
 const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [processedCards, setProcessedCards] = useState<string[]>([]);
-  const [dragState, setDragState] = useState<"none" | "left" | "right">("none");
+  const [dragState, setDragState] = useState<"none" | "left" | "right" | "up">("none");
   const [displayedCards, setDisplayedCards] = useState<string[]>(cards);
   const dragStartX = useRef(0);
+  const dragStartY = useRef(0);
   const currentX = useRef(0);
+  const currentY = useRef(0);
 
   const handleSwipeLeft = () => {
     if (activeIndex >= displayedCards.length) return;
@@ -44,37 +46,63 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
     }, 300);
   };
 
+  const handleSwipeUp = () => {
+    if (activeIndex >= displayedCards.length) return;
+    
+    const current = displayedCards[activeIndex];
+    setDragState("up");
+    
+    setTimeout(() => {
+      setProcessedCards([...processedCards, current]);
+      setActiveIndex(activeIndex + 1);
+      setDragState("none");
+      toast.info("Suggestion!");
+    }, 300);
+  };
+
   const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
     if ("touches" in e) {
       dragStartX.current = e.touches[0].clientX;
+      dragStartY.current = e.touches[0].clientY;
     } else {
       dragStartX.current = e.clientX;
+      dragStartY.current = e.clientY;
     }
   };
 
   const handleTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
     if ("touches" in e) {
       currentX.current = e.touches[0].clientX;
+      currentY.current = e.touches[0].clientY;
     } else {
       currentX.current = e.clientX;
+      currentY.current = e.clientY;
     }
     
-    const diff = currentX.current - dragStartX.current;
+    const diffX = currentX.current - dragStartX.current;
+    const diffY = currentY.current - dragStartY.current;
     
-    if (Math.abs(diff) < 50) {
+    if (Math.abs(diffX) < 50 && Math.abs(diffY) < 50) {
       setDragState("none");
-    } else if (diff > 0) {
+    } else if (diffY < -50 && Math.abs(diffY) > Math.abs(diffX)) {
+      // Upward swipe (negative Y)
+      setDragState("up");
+    } else if (diffX > 50) {
       setDragState("right");
-    } else {
+    } else if (diffX < -50) {
       setDragState("left");
     }
   };
 
   const handleTouchEnd = () => {
-    const diff = currentX.current - dragStartX.current;
+    const diffX = currentX.current - dragStartX.current;
+    const diffY = currentY.current - dragStartY.current;
     
-    if (Math.abs(diff) >= 100) {
-      if (diff > 0) {
+    if (Math.abs(diffY) > 100 && diffY < 0 && Math.abs(diffY) > Math.abs(diffX)) {
+      // Upward swipe detected
+      handleSwipeUp();
+    } else if (Math.abs(diffX) >= 100) {
+      if (diffX > 0) {
         handleSwipeRight();
       } else {
         handleSwipeLeft();
@@ -103,6 +131,7 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
           "relative flex-1 swipe-card-container",
           dragState === "left" && "dragging-left",
           dragState === "right" && "dragging-right",
+          dragState === "up" && "dragging-up",
         )}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -121,6 +150,7 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
               content={card}
               onSwipeLeft={handleSwipeLeft}
               onSwipeRight={handleSwipeRight}
+              onSwipeUp={handleSwipeUp}
               dragState={i === activeIndex ? dragState : "none"}
               active={i === activeIndex}
               index={cardIndex}
@@ -150,6 +180,13 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
           disabled={activeIndex >= displayedCards.length}
         >
           <span className="text-2xl">✕</span>
+        </button>
+        <button
+          onClick={handleSwipeUp}
+          className="bg-dating-blue text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:bg-opacity-90 transition-colors"
+          disabled={activeIndex >= displayedCards.length}
+        >
+          <span className="text-2xl">↑</span>
         </button>
         <button
           onClick={handleSwipeRight}

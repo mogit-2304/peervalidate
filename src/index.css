@@ -117,4 +117,8 @@
   .dragging-left .swipe-action-left {
     opacity: 1;
   }
+
+  .dragging-up .swipe-action-up {
+    opacity: 1;
+  }
 }
