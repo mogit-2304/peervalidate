@@ -14,55 +14,55 @@ const sampleCards: Card[] = [
   {
     id: "1",
     content: "I believe pineapple belongs on pizza",
-    category: "Food",
+    category: "WIS",
     duration: "1 day"
   },
   {
     id: "2",
     content: "I enjoy going to museums on weekends",
-    category: "Leisure",
+    category: "ETS",
     duration: "3 days"
   },
   {
     id: "3",
     content: "I think cats are better than dogs",
-    category: "Pets",
+    category: "MIS ONE",
     duration: "5 days"
   },
   {
     id: "4",
     content: "I prefer coffee over tea",
-    category: "Drinks",
+    category: "Sales",
     duration: "1 hour"
   },
   {
     id: "5",
     content: "I would rather travel to mountains than beaches",
-    category: "Travel",
+    category: "Support",
     duration: "10 days"
   },
   {
     id: "6",
     content: "I think breakfast is the most important meal of the day",
-    category: "Food",
+    category: "Tech",
     duration: "3 hours"
   },
   {
     id: "7",
     content: "I believe in love at first sight",
-    category: "Relationships",
+    category: "WIS",
     duration: "10 hours"
   },
   {
     id: "8",
     content: "I enjoy watching documentaries more than fiction",
-    category: "Entertainment",
+    category: "ETS",
     duration: "1 day"
   },
   {
     id: "9",
     content: "I prefer working from home over going to an office",
-    category: "Work",
+    category: "MIS ONE",
     duration: "3 days"
   },
   {
