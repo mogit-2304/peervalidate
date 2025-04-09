@@ -2,7 +2,6 @@
 import React from "react";
 import { Card as CardType } from "@/types";
 import { Badge } from "@/components/ui/badge";
-import { Clock } from "lucide-react";
 
 interface SwipeCardEnhancedProps {
   card: CardType;
@@ -42,12 +41,6 @@ const SwipeCardEnhanced: React.FC<SwipeCardEnhancedProps> = ({
               <Badge className="bg-dating-yellow text-black">
                 {card.category}
               </Badge>
-            )}
-            {card.duration && (
-              <div className="flex items-center text-sm text-gray-500">
-                <Clock size={14} className="mr-1" />
-                {card.duration}
-              </div>
             )}
           </div>
           
