@@ -61,6 +61,30 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
     return content;
   };
   
+  // Format the card data into a structured JIRA-like ticket format
+  const formatJiraDescription = () => {
+    let description = `Summary\nPB: ${cardData.content}\nDescription\n\n`;
+    description += `*Card ID:* ${cardData.id}\n`;
+    description += `*Category:* ${cardData.category}\n`;
+    description += `*Approval Count:* ${cardData.approvedCount}\n`;
+    description += `*Rejection Count:* ${cardData.rejectedCount}\n\n`;
+    
+    if (cardData.suggestions.length > 0) {
+      description += `h2. Suggestions\n\n`;
+      cardData.suggestions.forEach(suggestion => {
+        description += `----\n`;
+        description += `*Suggestion:* ${suggestion.suggestion}\n`;
+        description += `*By:* ${suggestion.author}\n`;
+        description += `*Date:* ${suggestion.date}\n`;
+        description += `----\n\n`;
+      });
+    } else {
+      description += "No suggestions available.";
+    }
+    
+    return description;
+  };
+  
   const [isGenerating, setIsGenerating] = useState(false);
   const [prdSummary, setPrdSummary] = useState("");
   
@@ -71,7 +95,9 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
       const contentToSummarize = formatContent();
       
       const generatedPRD = await generatePRDSummary(contentToSummarize);
-      setPrdSummary(generatedPRD);
+      // Combine the JIRA-style formatted description with the AI-generated PRD
+      const formattedPRD = formatJiraDescription() + "\nh2. AI-Generated PRD Summary\n\n" + generatedPRD;
+      setPrdSummary(formattedPRD);
       
       toast.success("PRD successfully generated!");
     } catch (error) {
