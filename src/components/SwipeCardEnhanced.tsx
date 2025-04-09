@@ -7,18 +7,23 @@ import { Clock } from "lucide-react";
 interface SwipeCardEnhancedProps {
   card: CardType;
   style?: React.CSSProperties;
+  zIndex?: number;
   onCardLeftScreen?: (direction: string) => void;
 }
 
 const SwipeCardEnhanced: React.FC<SwipeCardEnhancedProps> = ({ 
   card,
   style,
+  zIndex = 0,
   onCardLeftScreen
 }) => {
   return (
     <div 
-      className="bg-white rounded-lg shadow-lg overflow-hidden h-full w-full flex flex-col"
-      style={style}
+      className="absolute inset-0 bg-white rounded-lg shadow-lg overflow-hidden flex flex-col"
+      style={{
+        ...style,
+        zIndex
+      }}
     >
       {card.imageUrl && (
         <div className="h-1/2 bg-gray-100">

@@ -171,6 +171,26 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
     toast("Cards reset!");
   };
 
+  // Calculate card positioning based on index
+  const getCardStyle = (index: number) => {
+    if (index === activeIndex && isHolding) {
+      return {
+        transform: `translate(${cardPosition.x}px, ${cardPosition.y}px) rotate(${cardPosition.x * 0.05}deg)`
+      };
+    }
+    
+    // Create a cascading effect for the cards behind the active one
+    const offset = index - activeIndex;
+    if (offset > 0) {
+      return {
+        transform: `translateY(${offset * 10}px) scale(${1 - offset * 0.05})`,
+        opacity: 1 - (offset * 0.2)
+      };
+    }
+    
+    return {};
+  };
+
   return (
     <div className="relative w-full h-full flex flex-col">
       <div 
@@ -188,28 +208,25 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
         onMouseUp={handleTouchEnd}
         onMouseLeave={handleTouchEnd}
       >
-        {displayedCards.map((card, i) => {
-          const cardIndex = i - activeIndex;
-          if (cardIndex < 0 || cardIndex > 2) return null;
-          
-          // Only apply position transform to the active card while holding
-          const style = 
-            i === activeIndex && isHolding 
-              ? { transform: `translate(${cardPosition.x}px, ${cardPosition.y}px) rotate(${cardPosition.x * 0.05}deg)` } 
-              : undefined;
-          
-          return (
-            <SwipeCardEnhanced
-              key={`${card.id}-${i}`}
-              card={card}
-              style={style}
-            />
-          );
-        })}
+        <div className="relative w-full h-full">
+          {displayedCards.map((card, i) => {
+            const cardIndex = i - activeIndex;
+            if (cardIndex < 0 || cardIndex > 2) return null;
+            
+            return (
+              <SwipeCardEnhanced
+                key={`${card.id}-${i}`}
+                card={card}
+                style={getCardStyle(i)}
+                zIndex={displayedCards.length - i}
+              />
+            );
+          })}
+        </div>
         
         {activeIndex >= displayedCards.length && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center animate-slide-in">
+            <div className="text-center animate-fade-in">
               <h2 className="text-2xl font-bold mb-4">No more cards!</h2>
               <button
                 onClick={resetCards}
