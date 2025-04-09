@@ -13,7 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/types";
 import { toast } from "sonner";
-import { ImagePlus, EyeIcon, ChevronDown, ChevronUp } from "lucide-react";
+import { ImagePlus, EyeIcon, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import CardPreview from "./CardPreview";
 import {
   Collapsible,
@@ -164,11 +164,11 @@ const CardCreationForm: React.FC<CardCreationFormProps> = ({ onSubmit, onCancel 
                 />
                 <Button 
                   variant="destructive" 
-                  size="sm" 
-                  className="absolute top-2 right-2"
+                  size="icon"
+                  className="absolute bottom-2 right-2 rounded-full h-8 w-8"
                   onClick={() => setImageUrl(undefined)}
                 >
-                  Remove
+                  <Trash2 size={16} />
                 </Button>
               </div>
             )}
