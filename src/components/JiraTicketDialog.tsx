@@ -70,15 +70,27 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
   const formatJiraDescription = () => {
     let jiraDescription = `Summary\nPB: ${cardData.content}\nDescription\n\n`;
     
+    // Add user-entered description if available
     if (description.trim()) {
       jiraDescription += `${description}\n\n`;
     }
     
+    // Add suggestion text to description section
+    if (cardData.suggestions.length > 0) {
+      jiraDescription += "Suggestion Highlights:\n";
+      cardData.suggestions.forEach((suggestion, index) => {
+        jiraDescription += `- ${suggestion.suggestion}\n`;
+      });
+      jiraDescription += "\n";
+    }
+    
+    // Add metadata
     jiraDescription += `*Card ID:* ${cardData.id}\n`;
     jiraDescription += `*Category:* ${cardData.category}\n`;
     jiraDescription += `*Approval Count:* ${cardData.approvedCount}\n`;
     jiraDescription += `*Rejection Count:* ${cardData.rejectedCount}\n\n`;
     
+    // Add detailed suggestions section
     if (cardData.suggestions.length > 0) {
       jiraDescription += `h2. Suggestions\n\n`;
       cardData.suggestions.forEach(suggestion => {
