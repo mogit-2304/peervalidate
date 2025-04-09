@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/accordion";
 import { ChevronDown, FileText, ThumbsUp, ThumbsDown } from "lucide-react";
 import { toast } from "sonner";
+import JiraTicketDialog from "@/components/JiraTicketDialog";
 
 const Dashboard = () => {
   // Sample data - in a real app, this would come from the backend
@@ -97,11 +98,14 @@ const Dashboard = () => {
     },
   ];
 
+  // State for JIRA ticket dialog
+  const [isJiraDialogOpen, setIsJiraDialogOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<any>(null);
+
   // Function to handle creating a JIRA ticket
-  const createJiraTicket = (cardId: string) => {
-    // In a real app, this would call an API to create a JIRA ticket
-    console.log(`Creating JIRA ticket for card: ${cardId}`);
-    toast.success("JIRA PB ticket created successfully!");
+  const openJiraTicketDialog = (card: any) => {
+    setSelectedCard(card);
+    setIsJiraDialogOpen(true);
   };
 
   return (
@@ -193,10 +197,10 @@ const Dashboard = () => {
                               <Button 
                                 variant="outline"
                                 className="flex items-center gap-2 text-sm bg-gradient-to-r from-[#9b87f5] to-[#C72C41] text-white hover:from-[#8B5CF6] hover:to-[#D946EF] border-none"
-                                onClick={() => createJiraTicket(card.id)}
+                                onClick={() => openJiraTicketDialog(card)}
                               >
                                 <FileText className="h-4 w-4" />
-                                Summarize & Create JIRA PB Ticket
+                                Create JIRA PB Ticket
                               </Button>
                             </div>
                           </div>
@@ -210,6 +214,15 @@ const Dashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* JIRA Ticket Dialog */}
+      {selectedCard && (
+        <JiraTicketDialog 
+          isOpen={isJiraDialogOpen}
+          setIsOpen={setIsJiraDialogOpen}
+          cardData={selectedCard}
+        />
+      )}
     </div>
   );
 };
