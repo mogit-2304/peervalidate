@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from "react";
 import { cn } from "@/lib/utils";
 import SwipeCardEnhanced from "./SwipeCardEnhanced";
@@ -5,6 +6,7 @@ import FeedbackModal from "./FeedbackModal";
 import { toast } from "sonner";
 import { Card } from "@/types";
 import { Check, X, MessageCircle } from "lucide-react";
+import { useCards } from "@/context/CardContext";
 
 interface SwipeContainerProps {
   cards: Card[];
@@ -22,6 +24,7 @@ const SwipeContainer = forwardRef<SwipeContainerRef, SwipeContainerProps>(({ car
   const [isHolding, setIsHolding] = useState(false);
   const [cardPosition, setCardPosition] = useState({ x: 0, y: 0 });
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const { resetCards: globalResetCards } = useCards();
   const dragStartX = useRef(0);
   const dragStartY = useRef(0);
   const currentX = useRef(0);
@@ -30,6 +33,13 @@ const SwipeContainer = forwardRef<SwipeContainerRef, SwipeContainerProps>(({ car
   // Update displayed cards when cards prop changes
   useEffect(() => {
     setDisplayedCards(cards);
+    // Reset to the first card when new cards arrive
+    if (cards.length > 0 && activeIndex > 0) {
+      setActiveIndex(0);
+      setProcessedCards([]);
+      setDragState("none");
+      setCardPosition({ x: 0, y: 0 });
+    }
   }, [cards]);
 
   // Expose the resetToCard method to parent components
@@ -182,14 +192,11 @@ const SwipeContainer = forwardRef<SwipeContainerRef, SwipeContainerProps>(({ car
   }, [isHolding, activeIndex, displayedCards.length]);
 
   const resetCards = () => {
+    globalResetCards();
     setActiveIndex(0);
     setProcessedCards([]);
     setDragState("none");
     setCardPosition({ x: 0, y: 0 });
-    
-    // Shuffle the cards for variety
-    const shuffled = [...cards].sort(() => Math.random() - 0.5);
-    setDisplayedCards(shuffled);
     
     toast("Cards reset!");
   };

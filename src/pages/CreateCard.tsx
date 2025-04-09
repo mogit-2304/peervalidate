@@ -1,22 +1,20 @@
 
-import React, { useState } from "react";
+import React from "react";
 import CardCreationForm from "@/components/CardCreationForm";
 import { Card } from "@/types";
-import { v4 as uuidv4 } from "uuid";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useCards } from "@/context/CardContext";
 
 const CreateCard = () => {
   const navigate = useNavigate();
+  const { addCard } = useCards();
   
   const handleAddCard = (newCard: Omit<Card, "id">) => {
-    const cardWithId: Card = {
-      ...newCard,
-      id: uuidv4()
-    };
+    // Add the card to global context
+    addCard(newCard);
     
-    // In a real app, this would save to a backend/state management
-    // For now, we'll just show a success toast and navigate back
+    // Show success toast
     toast.success("New card created successfully!");
     
     // Navigate back to home page after creation
