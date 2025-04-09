@@ -63,10 +63,11 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Dating app specific colors
+				// Dating app specific colors - Updated with new values
 				dating: {
-					yellow: '#FFC629',
-					red: '#FF4B4B',
+					red: '#C72C41', // New primary color (replacing yellow)
+					darkPurple: '#2D142C', // New background color (replacing white)
+					yellow: '#C72C41', // Keeping this for backward compatibility
 					green: '#4CD964',
 					blue: '#4A90E2',
 					purple: '#9B87F5',

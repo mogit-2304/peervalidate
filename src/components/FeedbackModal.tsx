@@ -75,7 +75,11 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({
           <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={isSubmitting}>
+          <Button 
+            onClick={handleSubmit} 
+            disabled={isSubmitting}
+            className="bg-gradient-to-r from-[#9b87f5] to-[#C72C41] text-white hover:from-[#8B5CF6] hover:to-[#D946EF] border-none"
+          >
             {isSubmitting ? "Submitting..." : "Submit Feedback"}
           </Button>
         </DialogFooter>

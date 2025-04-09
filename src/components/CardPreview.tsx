@@ -27,7 +27,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ card }) => {
         <div>
           <div className="flex justify-between items-start mb-4">
             {card.category && (
-              <Badge className="bg-dating-yellow text-black">
+              <Badge className="bg-dating-red text-white">
                 {card.category}
               </Badge>
             )}
