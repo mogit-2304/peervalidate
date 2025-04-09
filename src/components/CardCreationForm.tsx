@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/types";
 import { toast } from "sonner";
 import { ImagePlus } from "lucide-react";
+import CardPreview from "./CardPreview";
 
 interface CardCreationFormProps {
   onSubmit: (card: Omit<Card, "id">) => void;
@@ -166,6 +167,22 @@ const CardCreationForm: React.FC<CardCreationFormProps> = ({ onSubmit, onCancel 
           </div>
         </div>
       </div>
+
+      {/* Card Preview Section */}
+      {(content || category || imageUrl) && (
+        <div className="mt-6">
+          <h3 className="text-sm font-medium mb-4">Card Preview</h3>
+          <div className="border rounded-lg overflow-hidden h-[300px] relative">
+            <CardPreview 
+              card={{
+                content,
+                category,
+                imageUrl
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       <div className="flex justify-end space-x-2">
         <Button variant="outline" onClick={onCancel}>
