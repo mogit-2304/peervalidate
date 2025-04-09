@@ -31,7 +31,7 @@ const Dashboard = () => {
     { name: "Suggestions", value: 8 },
   ];
   
-  const COLORS = ["#FFBB28", "#FF8042", "#00C49F", "#0088FE", "#8884d8", "#82ca9d"];
+  const COLORS = ["#C72C41", "#FF8042", "#00C49F", "#0088FE", "#8884d8", "#82ca9d"];
   
   // Enhanced card data with suggestions
   const cardsWithSuggestions = [
@@ -99,13 +99,13 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="pb-24 bg-gradient-to-b from-dating-lightgray to-white min-h-screen">
+    <div className="pb-24 bg-gradient-to-b from-[#2D142C] to-[#2D142C]/80 min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <header className="text-center mb-8">
           <h1 className="text-3xl font-bold">
-            <span className="text-dating-yellow">Dashboard</span>
+            <span className="text-[#C72C41]">Dashboard</span>
           </h1>
-          <p className="text-dating-darkgray mt-2">Insights and activity</p>
+          <p className="text-white mt-2">Insights and activity</p>
         </header>
         
         <Tabs defaultValue="overview" className="w-full max-w-4xl mx-auto">
@@ -158,7 +158,7 @@ const Dashboard = () => {
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
-                    <Bar dataKey="value" fill="#FFBB28" />
+                    <Bar dataKey="value" fill="#C72C41" />
                   </BarChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -175,7 +175,7 @@ const Dashboard = () => {
                         <CardTitle>{card.content}</CardTitle>
                         <CardDescription className="mt-1">Category: {card.category}</CardDescription>
                       </div>
-                      <Badge className="bg-dating-yellow text-black">{card.suggestions.length}</Badge>
+                      <Badge className="bg-[#C72C41] text-white">{card.suggestions.length}</Badge>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -198,7 +198,7 @@ const Dashboard = () => {
                             <div className="pt-4 flex justify-end">
                               <Button 
                                 variant="outline"
-                                className="flex items-center gap-2 text-sm"
+                                className="flex items-center gap-2 text-sm bg-gradient-to-r from-[#9b87f5] to-[#C72C41] text-white hover:from-[#8B5CF6] hover:to-[#D946EF] border-none"
                                 onClick={() => createJiraTicket(card.id)}
                               >
                                 <FileText className="h-4 w-4" />
