@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import SwipeCard from "./SwipeCard";
+import FeedbackModal from "./FeedbackModal";
 import { toast } from "sonner";
 
 interface SwipeContainerProps {
@@ -15,6 +16,7 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
   const [displayedCards, setDisplayedCards] = useState<string[]>(cards);
   const [isHolding, setIsHolding] = useState(false);
   const [cardPosition, setCardPosition] = useState({ x: 0, y: 0 });
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const dragStartX = useRef(0);
   const dragStartY = useRef(0);
   const currentX = useRef(0);
@@ -53,16 +55,23 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
   const handleSwipeUp = () => {
     if (activeIndex >= displayedCards.length) return;
     
-    const current = displayedCards[activeIndex];
     setDragState("up");
+    setIsFeedbackModalOpen(true);
+  };
+
+  const handleFeedbackSubmit = (feedback: string) => {
+    if (activeIndex >= displayedCards.length) return;
     
-    setTimeout(() => {
-      setProcessedCards([...processedCards, current]);
-      setActiveIndex(activeIndex + 1);
-      setDragState("none");
-      setCardPosition({ x: 0, y: 0 });
-      toast.info("Suggestion!");
-    }, 300);
+    const current = displayedCards[activeIndex];
+    
+    console.log(`Feedback for "${current}": ${feedback}`);
+    
+    // Process the card after feedback is submitted
+    setProcessedCards([...processedCards, current]);
+    setActiveIndex(activeIndex + 1);
+    setDragState("none");
+    setCardPosition({ x: 0, y: 0 });
+    toast.info("Suggestion submitted!");
   };
 
   const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
@@ -242,6 +251,16 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ cards }) => {
           <span className="text-2xl">✓</span>
         </button>
       </div>
+
+      {/* Feedback Modal */}
+      {activeIndex < displayedCards.length && (
+        <FeedbackModal
+          isOpen={isFeedbackModalOpen}
+          onClose={() => setIsFeedbackModalOpen(false)}
+          onSubmit={handleFeedbackSubmit}
+          cardContent={displayedCards[activeIndex]}
+        />
+      )}
     </div>
   );
 };
