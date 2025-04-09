@@ -15,6 +15,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Loader2, Copy } from "lucide-react";
 import { Button } from '@/components/ui/button';
+import CardPreview from '@/components/CardPreview';
+import { generatePRDSummary } from '@/services/openaiService';
 
 interface CardData {
   id: string;
@@ -68,34 +70,7 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
     try {
       const contentToSummarize = formatContent();
       
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer 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`
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            {
-              role: "system",
-              content: "You are a helpful product manager that writes product requirement documents."
-            },
-            {
-              role: "user",
-              content: `Summarize this content into a PRD: ${contentToSummarize}`
-            }
-          ]
-        })
-      });
-      
-      const result = await response.json();
-      
-      if (result.error) {
-        throw new Error(result.error.message || "Error generating PRD");
-      }
-      
-      const generatedPRD = result.choices[0].message.content;
+      const generatedPRD = await generatePRDSummary(contentToSummarize);
       setPrdSummary(generatedPRD);
       
       toast.success("PRD successfully generated!");
@@ -113,6 +88,12 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
       .catch(() => toast.error("Failed to copy to clipboard"));
   };
 
+  // Card preview data
+  const cardPreview = {
+    content: cardData.content,
+    category: cardData.category
+  };
+
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent className="max-w-2xl">
@@ -124,6 +105,11 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
         </AlertDialogHeader>
         
         <div className="space-y-4 py-4">
+          {/* Card Preview */}
+          <div className="w-full h-[200px] relative mb-6">
+            <CardPreview card={cardPreview} />
+          </div>
+          
           <div className="space-y-2">
             <label htmlFor="summary" className="text-sm font-medium">Summary</label>
             <Input
