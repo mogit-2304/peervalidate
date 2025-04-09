@@ -78,7 +78,7 @@ const Index = () => {
       <div className="container mx-auto px-4 py-8">
         <header className="text-center mb-8">
           <h1 className="text-3xl font-bold">
-            <span className="text-dating-red">SwipeSpark</span>
+            <span className="text-dating-red">PeerValidate</span>
           </h1>
           <p className="text-white mt-2">Swipe right to approve, left to reject</p>
         </header>
