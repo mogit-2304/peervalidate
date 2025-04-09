@@ -39,7 +39,7 @@ export const generatePRDSummary = async (content: string): Promise<string> => {
           },
           {
             role: "user",
-            content: `Summarize this content into a PRD: ${content}`
+            content: `Summarize this content into a PRD, including both the main idea and any additional description provided: ${content}`
           }
         ]
       })
@@ -57,3 +57,4 @@ export const generatePRDSummary = async (content: string): Promise<string> => {
     throw error;
   }
 };
+

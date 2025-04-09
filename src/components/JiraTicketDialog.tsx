@@ -44,12 +44,17 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
   cardData 
 }) => {
   const [summary, setSummary] = useState(`${cardData.content}`);
+  const [description, setDescription] = useState('');
   
   // Format suggestions to create a prompt for ChatGPT
   const formatContent = () => {
     let content = `Main Idea: ${cardData.content}\n\n`;
     content += `Category: ${cardData.category}\n`;
     content += `Approvals: ${cardData.approvedCount}, Rejections: ${cardData.rejectedCount}\n\n`;
+    
+    if (description.trim()) {
+      content += `Additional Description: ${description}\n\n`;
+    }
     
     if (cardData.suggestions.length > 0) {
       content += "Suggestions:\n";
@@ -63,26 +68,31 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
   
   // Format the card data into a structured JIRA-like ticket format
   const formatJiraDescription = () => {
-    let description = `Summary\nPB: ${cardData.content}\nDescription\n\n`;
-    description += `*Card ID:* ${cardData.id}\n`;
-    description += `*Category:* ${cardData.category}\n`;
-    description += `*Approval Count:* ${cardData.approvedCount}\n`;
-    description += `*Rejection Count:* ${cardData.rejectedCount}\n\n`;
+    let jiraDescription = `Summary\nPB: ${cardData.content}\nDescription\n\n`;
     
-    if (cardData.suggestions.length > 0) {
-      description += `h2. Suggestions\n\n`;
-      cardData.suggestions.forEach(suggestion => {
-        description += `----\n`;
-        description += `*Suggestion:* ${suggestion.suggestion}\n`;
-        description += `*By:* ${suggestion.author}\n`;
-        description += `*Date:* ${suggestion.date}\n`;
-        description += `----\n\n`;
-      });
-    } else {
-      description += "No suggestions available.";
+    if (description.trim()) {
+      jiraDescription += `${description}\n\n`;
     }
     
-    return description;
+    jiraDescription += `*Card ID:* ${cardData.id}\n`;
+    jiraDescription += `*Category:* ${cardData.category}\n`;
+    jiraDescription += `*Approval Count:* ${cardData.approvedCount}\n`;
+    jiraDescription += `*Rejection Count:* ${cardData.rejectedCount}\n\n`;
+    
+    if (cardData.suggestions.length > 0) {
+      jiraDescription += `h2. Suggestions\n\n`;
+      cardData.suggestions.forEach(suggestion => {
+        jiraDescription += `----\n`;
+        jiraDescription += `*Suggestion:* ${suggestion.suggestion}\n`;
+        jiraDescription += `*By:* ${suggestion.author}\n`;
+        jiraDescription += `*Date:* ${suggestion.date}\n`;
+        jiraDescription += `----\n\n`;
+      });
+    } else {
+      jiraDescription += "No suggestions available.";
+    }
+    
+    return jiraDescription;
   };
   
   const [isGenerating, setIsGenerating] = useState(false);
@@ -143,6 +153,17 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
               placeholder="Summary"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <label htmlFor="description" className="text-sm font-medium">Description</label>
+            <Textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add additional context or description about the suggestions"
+              className="min-h-[100px]"
             />
           </div>
           
