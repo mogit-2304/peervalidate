@@ -56,7 +56,7 @@ const CardCreationForm: React.FC<CardCreationFormProps> = ({ onSubmit, onCancel 
 
   const handleSubmit = () => {
     if (!content.trim()) {
-      toast.error("Please enter content for your card");
+      toast.error("Please enter a description for your card");
       return;
     }
     
@@ -84,6 +84,7 @@ const CardCreationForm: React.FC<CardCreationFormProps> = ({ onSubmit, onCancel 
     setImageUrl(undefined);
   };
 
+  const isFormValid = content.trim() !== "" && category !== "" && duration !== "";
   const hasPreviewContent = content || category || imageUrl;
 
   return (
@@ -111,7 +112,7 @@ const CardCreationForm: React.FC<CardCreationFormProps> = ({ onSubmit, onCancel 
         </div>
 
         <div>
-          <label className="text-sm font-medium mb-2 block">Content</label>
+          <label className="text-sm font-medium mb-2 block">Description</label>
           <Textarea 
             placeholder="Enter your opinion or statement..."
             value={content}
@@ -219,7 +220,10 @@ const CardCreationForm: React.FC<CardCreationFormProps> = ({ onSubmit, onCancel 
         <Button variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button onClick={handleSubmit}>
+        <Button 
+          onClick={handleSubmit} 
+          disabled={!isFormValid}
+        >
           Create Card
         </Button>
       </div>
