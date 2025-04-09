@@ -1,10 +1,9 @@
-
 /**
  * OpenAI Integration Service
  * Handles interactions with the OpenAI API
  */
 
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 interface OpenAIResponse {
   choices: {
@@ -31,17 +30,21 @@ export const generatePRDSummary = async (content: string): Promise<string> => {
         "Authorization": `Bearer ${OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-4",
         messages: [
           {
             role: "system",
-            content: "You are a helpful product manager that writes product requirement documents."
+            content: "You are a helpful product manager that writes product requirement documents. Format your response in clear, structured sections with markdown formatting."
           },
           {
             role: "user",
-            content: `Summarize this content into a PRD, including both the main idea and any additional description provided: ${content}`
+            content: `Please create a detailed PRD based on the following information. Include sections for Overview, Objectives, Requirements, and any other relevant sections. Format the response in markdown:
+
+${content}`
           }
-        ]
+        ],
+        temperature: 0.7,
+        max_tokens: 2000
       })
     });
     

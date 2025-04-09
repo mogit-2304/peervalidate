@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/accordion";
 import { ChevronDown, FileText, ThumbsUp, ThumbsDown } from "lucide-react";
 import { toast } from "sonner";
-import JiraTicketDialog from "@/components/JiraTicketDialog";
+import JiraTicketDialog, { CardData } from "@/components/JiraTicketDialog";
 
 const Dashboard = () => {
   // Sample data - in a real app, this would come from the backend
@@ -97,7 +97,7 @@ const Dashboard = () => {
     },
   ];
 
-  // State for JIRA ticket dialog
+  const [cards, setCards] = useState(cardsWithSuggestions);
   const [isJiraDialogOpen, setIsJiraDialogOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<any>(null);
 
@@ -105,6 +105,15 @@ const Dashboard = () => {
   const openJiraTicketDialog = (card: any) => {
     setSelectedCard(card);
     setIsJiraDialogOpen(true);
+  };
+
+  // Function to handle card updates
+  const handleCardUpdate = (cardId: string, updates: Partial<CardData>) => {
+    setCards(prevCards => 
+      prevCards.map(card => 
+        card.id === cardId ? { ...card, ...updates } : card
+      )
+    );
   };
 
   return (
@@ -154,7 +163,7 @@ const Dashboard = () => {
           
           <TabsContent value="cardsummary" className="space-y-6">
             <div className="grid gap-6">
-              {cardsWithSuggestions.map((card) => (
+              {cards.map((card) => (
                 <Card key={card.id}>
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
@@ -220,6 +229,7 @@ const Dashboard = () => {
           isOpen={isJiraDialogOpen}
           setIsOpen={setIsJiraDialogOpen}
           cardData={selectedCard}
+          onUpdateCard={handleCardUpdate}
         />
       )}
     </div>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   AlertDialog,
@@ -18,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import CardPreview from '@/components/CardPreview';
 import { generatePRDSummary } from '@/services/openaiService';
 
-interface CardData {
+export interface CardData {
   id: string;
   content: string;
   category: string;
@@ -36,12 +35,14 @@ interface JiraTicketDialogProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   cardData: CardData;
+  onUpdateCard?: (cardId: string, updates: Partial<CardData>) => void;
 }
 
 const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({ 
   isOpen, 
   setIsOpen, 
-  cardData 
+  cardData,
+  onUpdateCard
 }) => {
   const [summary, setSummary] = useState(`${cardData.content}`);
   const [description, setDescription] = useState('');
@@ -125,6 +126,19 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
       const contentToSummarize = formatContent();
       
       const generatedPRD = await generatePRDSummary(contentToSummarize);
+      
+      // Update only the suggestions array of the current card
+      if (onUpdateCard) {
+        onUpdateCard(cardData.id, {
+          suggestions: [...cardData.suggestions, {
+            id: Date.now().toString(),
+            suggestion: generatedPRD,
+            date: new Date().toISOString(),
+            author: "ChatGPT"
+          }]
+        });
+      }
+      
       // Combine the JIRA-style formatted description with the AI-generated PRD
       const formattedPRD = formatJiraDescription() + "\nh2. AI-Generated PRD Summary\n\n" + generatedPRD;
       setPrdSummary(formattedPRD);
@@ -144,6 +158,12 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
       .catch(() => toast.error("Failed to copy to clipboard"));
   };
 
+  const handleDialogClose = () => {
+    // Reset the dialog state
+    setPrdSummary("");
+    setIsOpen(false);
+  };
+
   // Card preview data
   const cardPreview = {
     content: cardData.content,
@@ -152,7 +172,7 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogContent className="max-w-2xl">
+      <AlertDialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
         <AlertDialogHeader>
           <AlertDialogTitle>Summarize Content</AlertDialogTitle>
           <AlertDialogDescription>
@@ -160,7 +180,7 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         
-        <div className="space-y-4 py-4">
+        <div className="space-y-4 py-4 overflow-y-auto max-h-[calc(90vh-200px)]">
           {/* Card Preview */}
           <div className="w-full h-[200px] relative mb-6">
             <CardPreview card={cardPreview} />
@@ -229,7 +249,7 @@ const JiraTicketDialog: React.FC<JiraTicketDialogProps> = ({
           <AlertDialogCancel disabled={isGenerating}>Cancel</AlertDialogCancel>
           {prdSummary && (
             <AlertDialogAction 
-              onClick={() => setIsOpen(false)}
+              onClick={handleDialogClose}
               className="bg-gradient-to-r from-[#9b87f5] to-[#C72C41] hover:from-[#8B5CF6] hover:to-[#D946EF]"
             >
               Done
