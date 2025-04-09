@@ -89,90 +89,92 @@ const CardCreationForm: React.FC<CardCreationFormProps> = ({ onSubmit, onCancel 
 
   return (
     <div className="space-y-6">
-      <div className="space-y-4">
-        <div>
-          <label className="text-sm font-medium mb-2 block">Category</label>
-          <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              {CATEGORIES.map((cat) => (
-                <SelectItem key={cat} value={cat}>
-                  {cat}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {category && (
-            <div className="mt-2">
-              <Badge className="bg-dating-yellow text-black">{category}</Badge>
-            </div>
-          )}
-        </div>
-
-        <div>
-          <label className="text-sm font-medium mb-2 block">Description</label>
-          <Textarea 
-            placeholder="Enter your opinion or statement..."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="min-h-[100px] resize-none"
-          />
-        </div>
-
-        <div>
-          <label className="text-sm font-medium mb-2 block">Duration</label>
-          <Select value={duration} onValueChange={setDuration}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select duration" />
-            </SelectTrigger>
-            <SelectContent>
-              {DURATIONS.map((dur) => (
-                <SelectItem key={dur} value={dur}>
-                  {dur}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <label className="text-sm font-medium mb-2 block">Image (Optional)</label>
-          <div className="space-y-2">
-            <Button 
-              type="button" 
-              variant="outline" 
-              className="w-full" 
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <ImagePlus className="mr-2" size={18} />
-              {imageUrl ? "Change Image" : "Add Image"}
-            </Button>
-            <input 
-              type="file"
-              ref={fileInputRef}
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageChange}
-            />
-            {imageUrl && (
-              <div className="mt-2 relative">
-                <img 
-                  src={imageUrl} 
-                  alt="Card image" 
-                  className="w-full h-40 object-cover rounded-md" 
-                />
-                <Button 
-                  variant="destructive" 
-                  size="icon"
-                  className="absolute bottom-2 right-2 rounded-full h-8 w-8"
-                  onClick={() => setImageUrl(undefined)}
-                >
-                  <Trash2 size={16} />
-                </Button>
+      <div className="bg-white rounded-lg shadow-[0_0_15px_rgba(238,69,64,0.5)] p-6">
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm font-medium mb-2 block">Category</label>
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {CATEGORIES.map((cat) => (
+                  <SelectItem key={cat} value={cat}>
+                    {cat}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {category && (
+              <div className="mt-2">
+                <Badge className="bg-dating-yellow text-black">{category}</Badge>
               </div>
             )}
+          </div>
+
+          <div>
+            <label className="text-sm font-medium mb-2 block">Description</label>
+            <Textarea 
+              placeholder="Enter your opinion or statement..."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="min-h-[100px] resize-none"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium mb-2 block">Duration</label>
+            <Select value={duration} onValueChange={setDuration}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select duration" />
+              </SelectTrigger>
+              <SelectContent>
+                {DURATIONS.map((dur) => (
+                  <SelectItem key={dur} value={dur}>
+                    {dur}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium mb-2 block">Image (Optional)</label>
+            <div className="space-y-2">
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="w-full" 
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <ImagePlus className="mr-2" size={18} />
+                {imageUrl ? "Change Image" : "Add Image"}
+              </Button>
+              <input 
+                type="file"
+                ref={fileInputRef}
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageChange}
+              />
+              {imageUrl && (
+                <div className="mt-2 relative">
+                  <img 
+                    src={imageUrl} 
+                    alt="Card image" 
+                    className="w-full h-40 object-cover rounded-md" 
+                  />
+                  <Button 
+                    variant="destructive" 
+                    size="icon"
+                    className="absolute bottom-2 right-2 rounded-full h-8 w-8"
+                    onClick={() => setImageUrl(undefined)}
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -183,7 +185,7 @@ const CardCreationForm: React.FC<CardCreationFormProps> = ({ onSubmit, onCancel 
           <Collapsible
             open={isPreviewOpen}
             onOpenChange={setIsPreviewOpen}
-            className="border rounded-lg overflow-hidden bg-white shadow-sm"
+            className="border rounded-lg overflow-hidden bg-white shadow-[0_0_15px_rgba(238,69,64,0.5)]"
           >
             <CollapsibleTrigger asChild>
               <Button 
